@@ -92,3 +92,37 @@
 {{ if (.Site.Params.customScripts | default false) }}
 {{ .Site.Params.customScripts | safeHTML }}
 {{ end }}
+
+<!-- Add Mermaid support -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.body.className.includes('dark') ? 'dark' : 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // Use MutationObserver to handle dynamic content loading
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    mermaid.init(undefined, '.language-mermaid');
+                }
+            });
+        });
+
+        // Start observing the document body for DOM changes
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // Initial render
+        mermaid.init(undefined, '.language-mermaid');
+    });
+</script>
